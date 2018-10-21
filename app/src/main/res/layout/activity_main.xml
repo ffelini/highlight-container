@@ -6,8 +6,46 @@
     android:layout_height="match_parent"
     tools:context="vturcan.com.highlightcontainer.MainActivity">
 
+    <include
+        android:id="@+id/settings_icon"
+        layout="@layout/layout_settings_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/email_icon"
+        layout="@layout/layout_email_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <vturcan.com.highligthcontainer.HighligthContainer
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:id="@+id/settings_highlight_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/highlight_overlay"
+        app:highlight_source_layout="@layout/layout_settings_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <vturcan.com.highligthcontainer.HighligthContainer
+        android:id="@+id/email_highlight_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/highlight_overlay"
+        app:highlight_source_layout="@layout/layout_email_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 </android.support.constraint.ConstraintLayout>
