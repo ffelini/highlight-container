@@ -1,1 +1,1 @@
-include ':highlight_container', ':app', ':base', ':instantapp'
+include ':app', ':app', ':app', ':highligthcontainer'
