@@ -9,5 +9,6 @@
 
     <vturcan.com.highligthcontainer.HighligthContainer
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:highlight_source_layout="@layout/image_settings_icon" />
 </android.support.constraint.ConstraintLayout>
