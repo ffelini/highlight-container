@@ -2,9 +2,12 @@ package vturcan.com.highligthcontainer
 
 import android.content.Context
 import android.graphics.Rect
+import android.support.annotation.LayoutRes
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+
+private const val INVALID_RESOURCE = -1
 
 class HighlightContainer @JvmOverloads constructor(
         context: Context,
@@ -19,8 +22,8 @@ class HighlightContainer @JvmOverloads constructor(
     init {
         context.theme.obtainStyledAttributes(attrs, R.styleable.HighlightContainer, 0, 0).apply {
             try {
-                val sourceLayoutResId = getResourceId(R.styleable.HighlightContainer_highlight_source_layout, 0)
-                highLightView = View.inflate(context, sourceLayoutResId, null).also { addView(it) }
+                val sourceLayoutResId = getResourceId(R.styleable.HighlightContainer_highlight_source_layout, INVALID_RESOURCE)
+                initHighlightView(sourceLayoutResId)
             } finally {
                 recycle()
             }
@@ -38,13 +41,22 @@ class HighlightContainer @JvmOverloads constructor(
         setOnClickListener { visibility = View.GONE }
     }
 
-    fun highlightView(source: View) {
+    private fun initHighlightView(@LayoutRes viewResourceId: Int) {
+        if (viewResourceId != INVALID_RESOURCE) {
+            removeAllViews()
+            highLightView = View.inflate(context, viewResourceId, null).also { addView(it) }
+        }
+    }
+
+    fun highlightView(source: View, @LayoutRes sourceLayoutResId: Int = INVALID_RESOURCE) {
+        initHighlightView(sourceLayoutResId)
+
         this.source = source
-        val anchor = source.getGlobalVisibleRect()
+        val sourceScreenRect = source.getGlobalVisibleRect()
         highLightView?.apply {
-            this.layoutParams = LayoutParams(anchor.width(), anchor.height())
-            this.x = anchor.left.toFloat().minus(containerGlobalRect?.left ?: 0)
-            this.y = anchor.top.toFloat().minus(containerGlobalRect?.top ?: 0)
+            this.layoutParams = LayoutParams(sourceScreenRect.width(), sourceScreenRect.height())
+            this.x = sourceScreenRect.left.toFloat().minus(containerGlobalRect?.left ?: 0)
+            this.y = sourceScreenRect.top.toFloat().minus(containerGlobalRect?.top ?: 0)
             requestLayout()
 
         }
