@@ -14,15 +14,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val settingsHighlightContainer = findViewById<HighlightContainer>(R.id.settings_highlight_container)
+        val highlightContainer = findViewById<HighlightContainer>(R.id.highlight_container)
         val emailHighlightContainer = findViewById<HighlightContainer>(R.id.email_highlight_container)
-        val asHighlightContainer = findViewById<HighlightContainer>(R.id.as_highlight_container)
         val settingsIcon = findViewById<View>(R.id.settings_icon).apply {
-            setOnClickListener { settingsHighlightContainer.highlightView(this) }
+            setOnClickListener { highlightContainer.highlightView(this, R.layout.layout_settings_icon) }
         }
         val animatedAsIcon = findViewById<View>(R.id.animated_as_icon).apply {
             setOnClickListener {
-                asHighlightContainer.highlightView(this)
+                highlightContainer.highlightView(this, R.layout.layout_as_icon)
                 this
                         .animate()
                         .scaleX(2f)
