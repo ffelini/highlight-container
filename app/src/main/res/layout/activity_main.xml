@@ -2,45 +2,61 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="vturcan.com.highlightcontainer.MainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    tools:context="vturcan.com.highlightcontainer.MainActivity">
 
     <include
         android:id="@+id/settings_icon"
         layout="@layout/layout_settings_icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="40dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp" />
+
+    <include
+        android:id="@+id/animated_as_icon"
+        layout="@layout/layout_as_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="130dp" />
 
     <include
         android:id="@+id/email_icon"
         layout="@layout/layout_email_icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="40dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp" />
 
     <vturcan.com.highligthcontainer.HighlightContainer
         android:id="@+id/settings_highlight_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/highlight_overlay"
-        app:highlight_source_layout="@layout/layout_settings_icon"
-        tools:visibility="visible"
-        android:visibility="visible"/>
+        android:visibility="gone"
+        app:highlight_source_layout="@layout/layout_settings_icon" />
 
     <vturcan.com.highligthcontainer.HighlightContainer
         android:id="@+id/email_highlight_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/highlight_overlay"
-        app:highlight_source_layout="@layout/layout_email_icon"
-        tools:visibility="visible" />
+        android:visibility="gone"
+        app:highlight_source_layout="@layout/layout_email_icon" />
+
+    <vturcan.com.highligthcontainer.HighlightContainer
+        android:id="@+id/as_highlight_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/highlight_overlay"
+        android:visibility="gone"
+        app:highlight_source_layout="@layout/layout_as_icon" />
 </RelativeLayout>
