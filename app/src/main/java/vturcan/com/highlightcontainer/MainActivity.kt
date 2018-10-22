@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import highlightcontainer.vturcan.com.highlight_container.R
-import vturcan.com.highligthcontainer.HighligthContainer
+import vturcan.com.highligthcontainer.HighlightContainer
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,8 +13,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val settingsHighlightContainer = findViewById<HighligthContainer>(R.id.settings_highlight_container)
-        val emailHighlightContainer = findViewById<HighligthContainer>(R.id.email_highlight_container)
+        val settingsHighlightContainer = findViewById<HighlightContainer>(R.id.settings_highlight_container)
+        val emailHighlightContainer = findViewById<HighlightContainer>(R.id.email_highlight_container)
         val settingsIcon = findViewById<View>(R.id.settings_icon).apply {
             setOnClickListener { settingsHighlightContainer.highlightView(this) }
         }
