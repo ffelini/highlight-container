@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.support.annotation.LayoutRes
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 
 private const val INVALID_RESOURCE = -1
@@ -15,9 +16,15 @@ class HighlightContainer @JvmOverloads constructor(
         defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    var onHighLightUpdate: ((HightLightView) -> Unit)? = null
+
     private var source: View? = null
     private var highLightView: View? = null
     private var containerGlobalRect: Rect? = null
+
+    private val onGlobalLayoutChange = ViewTreeObserver.OnGlobalLayoutListener {
+        refreshHighLightingView()
+    }
 
     init {
         context.theme.obtainStyledAttributes(attrs, R.styleable.HighlightContainer, 0, 0).apply {
@@ -26,16 +33,6 @@ class HighlightContainer @JvmOverloads constructor(
                 initHighlightView(sourceLayoutResId)
             } finally {
                 recycle()
-            }
-        }
-        viewTreeObserver.addOnGlobalLayoutListener {
-            val hideContainer = containerGlobalRect == null
-            containerGlobalRect = this@HighlightContainer.getGlobalVisibleRect()
-            if (visibility == View.VISIBLE) {
-                source?.let { highlightView(it) }
-            }
-            if (hideContainer) {
-                visibility = View.GONE
             }
         }
         setOnClickListener { visibility = View.GONE }
@@ -48,19 +45,40 @@ class HighlightContainer @JvmOverloads constructor(
         }
     }
 
-    fun highlightView(source: View, @LayoutRes sourceLayoutResId: Int = INVALID_RESOURCE) {
+    private fun refreshHighLightingView() {
+        source?.let { highlightView(it) }
+    }
+
+    fun highlightView(
+            source: View,
+            @LayoutRes sourceLayoutResId: Int = INVALID_RESOURCE
+    ) {
         initHighlightView(sourceLayoutResId)
+        visibility = View.VISIBLE
 
         this.source = source
-        val sourceScreenRect = source.getGlobalVisibleRect()
+        this.containerGlobalRect = this.getGlobalVisibleRect()
+        val sourceGlobalRect = source.getGlobalVisibleRect()
         highLightView?.apply {
-            this.layoutParams = LayoutParams(sourceScreenRect.width(), sourceScreenRect.height())
-            this.x = sourceScreenRect.left.toFloat().minus(containerGlobalRect?.left ?: 0)
-            this.y = sourceScreenRect.top.toFloat().minus(containerGlobalRect?.top ?: 0)
+            this.layoutParams = LayoutParams(sourceGlobalRect.width(), sourceGlobalRect.height())
+            this.x = sourceGlobalRect.left.toFloat().minus(containerGlobalRect?.left ?: 0)
+            this.y = sourceGlobalRect.top.toFloat().minus(containerGlobalRect?.top ?: 0)
             requestLayout()
-
+            onHighLightUpdate?.invoke(HightLightView(this, sourceGlobalRect))
         }
-        visibility = View.VISIBLE
+    }
+
+    override fun setVisibility(visibility: Int) {
+        val oldVisibility = this.visibility
+        super.setVisibility(visibility)
+        if (visibility != oldVisibility) {
+            if (visibility == View.VISIBLE) {
+                viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutChange)
+                refreshHighLightingView()
+            } else {
+                viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutChange)
+            }
+        }
     }
 
     private fun View.getGlobalVisibleRect(): Rect = Rect().also { this.getGlobalVisibleRect(it) }
