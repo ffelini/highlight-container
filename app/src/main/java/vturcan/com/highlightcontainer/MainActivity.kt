@@ -21,7 +21,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.generic_view).apply {
-            setOnClickListener { highlightContainer.highlightView(this) }
+            setOnClickListener {
+                highlightContainer.highlightView(this)
+                this
+                        .animate()
+                        .yBy(-50f)
+                        .setInterpolator(BounceInterpolator())
+                        .setDuration(3000)
+                        .start()
+            }
         }
 
         findViewById<View>(R.id.animated_as_icon).apply {
@@ -38,7 +46,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.email_icon).apply {
-            setOnClickListener { highlightContainer.highlightView(this) }
+            setOnClickListener {
+                highlightContainer.highlightView(this)
+                this
+                        .animate()
+                        .scaleX(2f)
+                        .scaleY(2f)
+                        .setInterpolator(BounceInterpolator())
+                        .setDuration(3000)
+                        .start()
+            }
         }
     }
 
