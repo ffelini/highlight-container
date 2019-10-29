@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/background_dark"
     tools:context="vturcan.com.highlightcontainer.MainActivity">
 
     <include
@@ -36,18 +37,20 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="40dp" />
 
+    <include
+        android:id="@+id/generic_view"
+        layout="@layout/layout_generic_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        />
+
     <vturcan.com.highligthcontainer.HighlightContainer
         android:id="@+id/highlight_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/highlight_overlay"
         android:visibility="gone" />
-
-    <vturcan.com.highligthcontainer.HighlightContainer
-        android:id="@+id/email_highlight_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/highlight_overlay"
-        android:visibility="gone"
-        app:highlight_source_layout="@layout/layout_email_icon" />
 </RelativeLayout>

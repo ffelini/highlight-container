@@ -1,13 +1,16 @@
 package vturcan.com.highligthcontainer
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Rect
 import android.support.annotation.LayoutRes
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 
-private const val INVALID_RESOURCE = -1
+private const val NO_RESOURCE = -1
 
 class HighlightContainer @JvmOverloads constructor(
         context: Context,
@@ -20,19 +23,11 @@ class HighlightContainer @JvmOverloads constructor(
     private var containerGlobalRect: Rect? = null
 
     init {
-        context.theme.obtainStyledAttributes(attrs, R.styleable.HighlightContainer, 0, 0).apply {
-            try {
-                val sourceLayoutResId = getResourceId(R.styleable.HighlightContainer_highlight_source_layout, INVALID_RESOURCE)
-                initHighlightView(sourceLayoutResId)
-            } finally {
-                recycle()
-            }
-        }
         viewTreeObserver.addOnGlobalLayoutListener {
             val hideContainer = containerGlobalRect == null
             containerGlobalRect = this@HighlightContainer.getGlobalVisibleRect()
             if (visibility == View.VISIBLE) {
-                source?.let { highlightView(it) }
+                refresh()
             }
             if (hideContainer) {
                 visibility = View.GONE
@@ -41,27 +36,48 @@ class HighlightContainer @JvmOverloads constructor(
         setOnClickListener { visibility = View.GONE }
     }
 
-    private fun initHighlightView(@LayoutRes viewResourceId: Int) {
-        if (viewResourceId != INVALID_RESOURCE) {
-            removeAllViews()
-            highLightView = View.inflate(context, viewResourceId, null).also { addView(it) }
+    private fun initHighlightView(@LayoutRes viewResourceId: Int): View {
+        return View.inflate(context, viewResourceId, null)
+    }
+
+    private fun initHighlightView(source: View): ImageView {
+        return ImageView(context).apply {
+            setImageBitmap(source.toBitmap())
         }
     }
 
-    fun highlightView(source: View, @LayoutRes sourceLayoutResId: Int = INVALID_RESOURCE) {
-        initHighlightView(sourceLayoutResId)
+    fun highlightView(source: View, @LayoutRes sourceLayoutResId: Int = NO_RESOURCE) {
+        removeAllViews()
+        highLightView = when (sourceLayoutResId) {
+            NO_RESOURCE -> initHighlightView(source)
+            else -> initHighlightView(sourceLayoutResId)
+        }
+        addView(highLightView)
+        refresh()
 
         this.source = source
-        val sourceScreenRect = source.getGlobalVisibleRect()
-        highLightView?.apply {
-            this.layoutParams = LayoutParams(sourceScreenRect.width(), sourceScreenRect.height())
-            this.x = sourceScreenRect.left.toFloat().minus(containerGlobalRect?.left ?: 0)
-            this.y = sourceScreenRect.top.toFloat().minus(containerGlobalRect?.top ?: 0)
-            requestLayout()
-
-        }
         visibility = View.VISIBLE
     }
 
+    private fun refresh() {
+        source?.let {
+            val sourceScreenRect = it.getGlobalVisibleRect()
+            highLightView?.apply {
+                this.layoutParams = LayoutParams(sourceScreenRect.width(), sourceScreenRect.height())
+                this.x = sourceScreenRect.left.toFloat().minus(containerGlobalRect?.left ?: 0)
+                this.y = sourceScreenRect.top.toFloat().minus(containerGlobalRect?.top ?: 0)
+                requestLayout()
+            }
+        }
+    }
+
     private fun View.getGlobalVisibleRect(): Rect = Rect().also { this.getGlobalVisibleRect(it) }
+
+    private fun View.toBitmap(): Bitmap {
+        val b = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
+        val c = Canvas(b)
+        layout(this.left, this.top, this.right, this.bottom)
+        this.draw(c)
+        return b
+    }
 }

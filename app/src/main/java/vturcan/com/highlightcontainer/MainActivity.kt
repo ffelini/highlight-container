@@ -15,11 +15,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val highlightContainer = findViewById<HighlightContainer>(R.id.highlight_container)
-        val emailHighlightContainer = findViewById<HighlightContainer>(R.id.email_highlight_container)
-        val settingsIcon = findViewById<View>(R.id.settings_icon).apply {
+
+        findViewById<View>(R.id.settings_icon).apply {
             setOnClickListener { highlightContainer.highlightView(this, R.layout.layout_settings_icon) }
         }
-        val animatedAsIcon = findViewById<View>(R.id.animated_as_icon).apply {
+
+        findViewById<View>(R.id.generic_view).apply {
+            setOnClickListener { highlightContainer.highlightView(this) }
+        }
+
+        findViewById<View>(R.id.animated_as_icon).apply {
             setOnClickListener {
                 highlightContainer.highlightView(this, R.layout.layout_as_icon)
                 this
@@ -31,8 +36,9 @@ class MainActivity : AppCompatActivity() {
                         .start()
             }
         }
-        val emailIcon = findViewById<View>(R.id.email_icon).apply {
-            setOnClickListener { emailHighlightContainer.highlightView(this) }
+
+        findViewById<View>(R.id.email_icon).apply {
+            setOnClickListener { highlightContainer.highlightView(this) }
         }
     }
 
