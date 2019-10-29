@@ -53,15 +53,15 @@ class HighlightContainer @JvmOverloads constructor(
             else -> initHighlightView(sourceLayoutResId)
         }
         addView(highLightView)
-        refresh()
 
         this.source = source
         visibility = View.VISIBLE
+        refresh()
     }
 
     private fun refresh() {
-        source?.let {
-            val sourceScreenRect = it.getGlobalVisibleRect()
+        source?.let { source ->
+            val sourceScreenRect = source.getGlobalVisibleRect()
             highLightView?.apply {
                 this.layoutParams = LayoutParams(sourceScreenRect.width(), sourceScreenRect.height())
                 this.x = sourceScreenRect.left.toFloat().minus(containerGlobalRect?.left ?: 0)
