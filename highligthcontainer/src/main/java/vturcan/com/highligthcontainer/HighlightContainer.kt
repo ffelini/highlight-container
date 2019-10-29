@@ -12,6 +12,15 @@ import android.widget.ImageView
 
 private const val NO_RESOURCE = -1
 
+/**
+ * Use this custom component to highlight separate views on the screen.
+ * For appropriate functioning this container should be placed on top of everything in your activity.
+ * When a view is highlighted this container will show up and cover everything
+ * behind. You'll have to specify a background color so it can act as a modal layer.
+ *
+ * The highlight effect is implemented by inflating a View copy right in front of
+ * the provided source.
+ */
 class HighlightContainer @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
@@ -46,12 +55,20 @@ class HighlightContainer @JvmOverloads constructor(
         }
     }
 
+    /**
+     * @param source - the source view to be highlighted. Will be used as source for drawing the
+     * highlight effect.
+     * @param sourceLayoutResId - the provided layout resource should be the exact layout copy of
+     * the source since it'll be inflated and placed in front of the source.
+     * If [sourceLayoutResId] is not provided, the [source] view will be cloned into a Bitmap
+     * and used as highlight effect.
+     */
     fun highlightView(source: View, @LayoutRes sourceLayoutResId: Int = NO_RESOURCE) {
-        removeAllViews()
         highLightView = when (sourceLayoutResId) {
             NO_RESOURCE -> initHighlightView(source)
             else -> initHighlightView(sourceLayoutResId)
         }
+        removeAllViews()
         addView(highLightView)
 
         this.source = source
@@ -66,6 +83,9 @@ class HighlightContainer @JvmOverloads constructor(
                 this.layoutParams = LayoutParams(sourceScreenRect.width(), sourceScreenRect.height())
                 this.x = sourceScreenRect.left.toFloat().minus(containerGlobalRect?.left ?: 0)
                 this.y = sourceScreenRect.top.toFloat().minus(containerGlobalRect?.top ?: 0)
+                this.rotationX = source.rotationX
+                this.rotationY = source.rotationY
+                this.rotation = source.rotation
                 requestLayout()
             }
         }
