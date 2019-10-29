@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
                         .animate()
                         .scaleX(2f)
                         .scaleY(2f)
+                        .rotationBy(20f)
                         .setInterpolator(BounceInterpolator())
                         .setDuration(3000)
                         .start()
